@@ -4,14 +4,14 @@ services:
 
   elasticsearch:
     build: elasticsearch/
-    volumes:
-      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    restart: always
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - esdata:/usr/share/elasticsearch/data
     networks:
       - elk
@@ -19,6 +19,7 @@ services:
 
   logstash:
     build: logstash/
+    restart: always
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline:/usr/share/logstash/pipeline
@@ -34,6 +35,7 @@ services:
 
   kibana:
     build: kibana/
+    restart: always
     volumes:
       - ./kibana/config/:/usr/share/kibana/config
     ports:
@@ -45,6 +47,7 @@ services:
   
   redis:
     build: redis/
+    restart: always
     ports:
       - "6379:6379"
     networks:
