@@ -11,8 +11,11 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
     networks:
       - elk
+    
 
   logstash:
     build: logstash/
@@ -27,6 +30,7 @@ services:
       - elk
     depends_on:
       - elasticsearch
+      - redis
 
   kibana:
     build: kibana/
@@ -38,8 +42,18 @@ services:
       - elk
     depends_on:
       - elasticsearch
+  
+  redis:
+    build: redis/
+    ports:
+      - "6379:6379"
+    networks:
+      - elk
 
+volumes:
+  esdata:
+    driver: local
+      
 networks:
-
   elk:
     driver: bridge
